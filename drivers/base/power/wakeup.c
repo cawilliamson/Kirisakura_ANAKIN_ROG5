@@ -1143,8 +1143,8 @@ void pm_wakeup_clear(unsigned int irq_number)
 
 void pm_system_irq_wakeup(unsigned int irq_number)
 {
-	struct irq_desc *desc;
-	const char *name = "null";
+	struct irq_desc *desc __maybe_unused;
+	const char *name __maybe_unused = "null";
 
 	unsigned long flags;
 

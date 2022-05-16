@@ -4465,7 +4465,7 @@ static int ntn3_i2c_read(struct i2c_client *client, u32 reg_addr,
 static int ntn3_ep_reset_ctrl(struct pcie_i2c_ctrl *i2c_ctrl, bool reset)
 {
 	int ret, rd_val;
-	struct msm_pcie_dev_t *pcie_dev = container_of(i2c_ctrl,
+	struct msm_pcie_dev_t __maybe_unused *pcie_dev = container_of(i2c_ctrl,
 						       struct msm_pcie_dev_t,
 						       i2c_ctrl);
 
@@ -4544,7 +4544,7 @@ static int ntn3_ep_reset_ctrl(struct pcie_i2c_ctrl *i2c_ctrl, bool reset)
 static void ntn3_dump_regs(struct pcie_i2c_ctrl *i2c_ctrl)
 {
 	int i, val;
-	struct msm_pcie_dev_t *pcie_dev = container_of(i2c_ctrl,
+	struct msm_pcie_dev_t __maybe_unused *pcie_dev = container_of(i2c_ctrl,
 						       struct msm_pcie_dev_t,
 						       i2c_ctrl);
 
@@ -4564,7 +4564,7 @@ static void ntn3_dump_regs(struct pcie_i2c_ctrl *i2c_ctrl)
 static void ntn3_de_emphasis_wa(struct pcie_i2c_ctrl *i2c_ctrl)
 {
 	int i, val, ret, rd_val;
-	struct msm_pcie_dev_t *pcie_dev = container_of(i2c_ctrl,
+	struct msm_pcie_dev_t __maybe_unused *pcie_dev = container_of(i2c_ctrl,
 						       struct msm_pcie_dev_t,
 						       i2c_ctrl);
 	ret = i2c_ctrl->client_i2c_read(i2c_ctrl->client,

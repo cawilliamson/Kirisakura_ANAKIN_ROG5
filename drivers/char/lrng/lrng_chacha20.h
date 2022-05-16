@@ -19,7 +19,7 @@ struct chacha20_block {
 	u32 nonce[3];
 };
 
-static inline void lrng_cc20_init_rfc7539(struct chacha20_block *chacha20)
+static inline void lrng_cc20_init_rfc7539(struct chacha20_block *lrng_chacha20)
 {
-	chacha_init_consts(chacha20->constants);
+	chacha_init_consts(lrng_chacha20->constants);
 }

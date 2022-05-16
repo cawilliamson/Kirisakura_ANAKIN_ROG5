@@ -352,7 +352,7 @@ static void adreno_pwr_on_work(struct work_struct *work)
 	struct adreno_device *adreno_dev =
 		container_of(work, typeof(*adreno_dev), pwr_on_work);
 	struct kgsl_device *device = KGSL_DEVICE(adreno_dev);
-	const struct adreno_power_ops *ops = ADRENO_POWER_OPS(adreno_dev);
+	const struct adreno_power_ops __maybe_unused *ops = ADRENO_POWER_OPS(adreno_dev);
 
 	mutex_lock(&device->mutex);
 

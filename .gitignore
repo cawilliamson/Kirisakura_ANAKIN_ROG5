@@ -50,6 +50,7 @@ modules.order
 #
 # Top-level generic files
 #
+/out
 /tags
 /TAGS
 /linux

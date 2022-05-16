@@ -119,7 +119,7 @@
 
 /************************ Default DRNG implementation *************************/
 
-extern struct chacha20_state chacha20;
+extern struct chacha20_state lrng_chacha20;
 extern const struct lrng_crypto_cb lrng_cc20_crypto_cb;
 void lrng_cc20_init_state(struct chacha20_state *state);
 

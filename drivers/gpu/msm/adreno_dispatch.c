@@ -272,7 +272,7 @@ static void start_fault_timer(struct adreno_device *adreno_dev)
 static void _retire_timestamp(struct kgsl_drawobj *drawobj)
 {
 	struct kgsl_context *context = drawobj->context;
-	struct adreno_context *drawctxt = ADRENO_CONTEXT(context);
+	struct adreno_context __maybe_unused *drawctxt = ADRENO_CONTEXT(context);
 	struct kgsl_device *device = context->device;
 
 	/*
@@ -1091,7 +1091,7 @@ static inline int _verify_cmdobj(struct kgsl_device_private *dev_priv,
 		struct kgsl_context *context, struct kgsl_drawobj *drawobj[],
 		uint32_t count)
 {
-	struct kgsl_device *device = dev_priv->device;
+	struct kgsl_device __maybe_unused *device = dev_priv->device;
 	struct kgsl_memobj_node *ib;
 	unsigned int i;
 
@@ -2268,7 +2268,7 @@ static void cmdobj_profile_ticks(struct adreno_device *adreno_dev,
 static void retire_cmdobj(struct adreno_device *adreno_dev,
 		struct kgsl_drawobj_cmd *cmdobj)
 {
-	struct adreno_dispatcher *dispatcher = &adreno_dev->dispatcher;
+	struct adreno_dispatcher __maybe_unused *dispatcher = &adreno_dev->dispatcher;
 	struct kgsl_drawobj *drawobj = DRAWOBJ(cmdobj);
 	struct kgsl_context *context = drawobj->context;
 	uint64_t start = 0, end = 0;
