@@ -109,3 +109,20 @@ config MMC_CRYPTO
 	  Enabling this makes it possible for the kernel to use the crypto
 	  capabilities of the MMC device (if present) to perform crypto
 	  operations on data being transferred to/from the device.
+
+config MMC_SPI_CRC_DEFAULT
+	bool "Enable CRC checksum for SPI by default"
+	default y
+	help
+	  Enable CRC checksums in SPI operations by default.
+
+config MMC_SPI_CRC_SYSFS
+	bool "Enable sysfs interface for SPI CRC toggle"
+	default y
+	help
+	  Export a sysfs interface to switch SPI CRC checksums on/off
+	  from userspace. This will let users customize the behavior
+	  of the MMC driver from userspace with a script or a kernel
+	  manager.
+	  The interface is /sys/kernel/mmc_spi_crc_enable
+	  0 to disable, non-zero to enable.

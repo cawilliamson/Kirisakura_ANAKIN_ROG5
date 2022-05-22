@@ -6,6 +6,7 @@
  *  SD support Copyright (C) 2004 Ian Molton, All Rights Reserved.
  *  Copyright (C) 2005-2008 Pierre Ossman, All Rights Reserved.
  *  MMCv4 support Copyright (C) 2006 Philip Langdale, All Rights Reserved.
+ *  Copyright (C) 2020 Benjamin Ausensi Tapia
  */
 #include <linux/module.h>
 #include <linux/init.h>
@@ -51,6 +52,17 @@
 #include "sd_ops.h"
 #include "sdio_ops.h"
 
+#ifdef CONFIG_MMC_SPI_CRC_SYSFS
+#include <linux/kobject.h>
+#include <linux/sysfs.h>
+
+ssize_t spicrc_show(struct kobject *o, struct kobj_attribute *a, char *buf);
+ssize_t spicrc_store(struct kobject *o, struct kobj_attribute *a,
+		   const char *buf, size_t count);
+
+static struct kobject *kobj_spicrc;
+#endif
+
 /* The max erase timeout, used when host->max_busy_timeout isn't specified */
 #define MMC_ERASE_TIMEOUT_MS	(60 * 1000) /* 60 s */
 #define SD_DISCARD_TIMEOUT_MS	(250)
@@ -62,7 +74,18 @@ static const unsigned freqs[] = { 400000, 300000, 200000, 100000 };
  * performance cost, and for other reasons may not always be desired.
  * So we allow it it to be disabled.
  */
+#ifdef CONFIG_MMC_SPI_CRC_DEFAULT
 bool use_spi_crc = 1;
+#else /* CONFIG_MMC_SPI_CRC_DEFAULT */
+bool use_spi_crc = 0;
+#endif /* CONFIG_MMC_SPI_CRC_DEFAULT */
+
+#ifdef CONFIG_MMC_SPI_CRC_SYSFS
+static struct kobj_attribute kobj_attr_spicrc = __ATTR(use_spi_crc
+						      ,0660
+						      ,spicrc_show
+						      ,spicrc_store);
+#endif /* CONFIG_MMC_SPI_CRC_SYSFS */
 module_param(use_spi_crc, bool, 0);
 
 static int mmc_schedule_delayed_work(struct delayed_work *work,
@@ -3259,6 +3282,23 @@ void mmc_stop_host(struct mmc_host *host)
 	mmc_release_host(host);
 }
 
+/* sysfs begin */
+#ifdef CONFIG_MMC_SPI_CRC_SYSFS
+ssize_t spicrc_show(struct kobject *o, struct kobj_attribute *a, char *buf) {
+	pr_info("mmc_core: use_spi_crc read\n");
+	return sprintf(buf, "%d", use_spi_crc);
+}
+
+ssize_t spicrc_store(struct kobject *o, struct kobj_attribute *a,
+		   const char *buf, size_t count) {
+	pr_info("mmc_core: use_spi_crc written (%s)\n", buf);
+	u8 c = (u8)buf[0];
+	use_spi_crc = (c == '0') ? 0 : 1;
+	return count;
+}
+#endif /* CONFIG_MMC_SPI_CRC_SYSFS */
+/* sysfs end */
+
 static int __init mmc_init(void)
 {
 	int ret;
@@ -3275,8 +3315,22 @@ static int __init mmc_init(void)
 	if (ret)
 		goto unregister_host_class;
 
+#ifdef CONFIG_MMC_SPI_CRC_SYSFS
+	kobj_spicrc = kobject_create_and_add("mmc", kernel_kobj);
+	if(!kobj_spicrc)
+		return -ENOMEM;
+
+	if(sysfs_create_file(kobj_spicrc, &kobj_attr_spicrc.attr))
+		goto sysfs_free;
+#endif /* CONFIG_MMC_SPI_CRC_SYSFS */
+
 	return 0;
 
+#ifdef CONFIG_MMC_SPI_CRC_SYSFS
+sysfs_free:
+	kobject_put(kobj_spicrc);
+	sysfs_remove_file(kernel_kobj, &kobj_attr_spicrc.attr);
+#endif /* CONFIG_MMC_SPI_CRC_SYSFS */
 unregister_host_class:
 	mmc_unregister_host_class();
 unregister_bus:
@@ -3286,6 +3340,10 @@ unregister_bus:
 
 static void __exit mmc_exit(void)
 {
+#ifdef CONFIG_MMC_SPI_CRC_SYSFS
+	kobject_put(kobj_spicrc);
+	sysfs_remove_file(kernel_kobj, &kobj_attr_spicrc.attr);
+#endif /* CONFIG_MMC_SPI_CRC_SYSFS */
 	sdio_unregister_bus();
 	mmc_unregister_host_class();
 	mmc_unregister_bus();
