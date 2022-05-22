@@ -3291,9 +3291,9 @@ ssize_t spicrc_show(struct kobject *o, struct kobj_attribute *a, char *buf) {
 
 ssize_t spicrc_store(struct kobject *o, struct kobj_attribute *a,
 		   const char *buf, size_t count) {
-	pr_info("mmc_core: use_spi_crc written (%s)\n", buf);
 	u8 c = (u8)buf[0];
 	use_spi_crc = (c == '0') ? 0 : 1;
+	pr_info("mmc_core: use_spi_crc written (%s)\n", buf);
 	return count;
 }
 #endif /* CONFIG_MMC_SPI_CRC_SYSFS */
