@@ -124,5 +124,5 @@ config MMC_SPI_CRC_SYSFS
 	  from userspace. This will let users customize the behavior
 	  of the MMC driver from userspace with a script or a kernel
 	  manager.
-	  The interface is /sys/kernel/mmc_spi_crc_enable
+	  The interface is /sys/kernel/mmc/spi_crc_enable
 	  0 to disable, non-zero to enable.
