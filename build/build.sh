@@ -1,7 +1,7 @@
 # build docker container
 docker build -t buildkernel .
 
-# execute build process within 
+# execute build process within
 docker run \
   -v $(pwd)/common:/common \
   -v $(pwd)/out:/out \

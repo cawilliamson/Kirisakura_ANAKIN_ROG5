@@ -8,8 +8,25 @@ git clone \
 # create config
 cp -fv /common/configs/anykernel.sh /usr/src/anykernel3/anykernel.sh
 
+# create ramdisk dir structure
+mkdir -p /usr/src/anykernel3/ramdisk/overlay.d/sbin
+cp -fv /common/configs/init.kirisakura.rc /usr/src/anykernel3/ramdisk/overlay.d/
+cp -fv /common/configs/init.kirisakura.sh /usr/src/anykernel3/ramdisk/overlay.d/sbin/
+chmod +x /usr/src/anykernel3/ramdisk/overlay.d/sbin/init.kirisakura.sh
+
+# remove placeholder dirs
+rm -rf /usr/src/anykernel3/{patch,modules/system/lib}
+
+# create modules directory structure
+mkdir -p /usr/src/anykernel3/modules/system/vendor/{bin,etc/perf,lib/modules}
+cp -fv /common/configs/perfboostsconfig.xml /usr/src/anykernel3/modules/system/vendor/etc/perf/
+find /src/out -name '*.ko' -exec cp -v '{}' /usr/src/anykernel3/modules/system/vendor/lib/modules \;
+
 # copy kernel image and dtb to zip
-cp -v /src/out/arch/arm64/boot/Image /usr/src/anykernel3/Image
+cp -v /src/out/arch/arm64/boot/dtb /usr/src/anykernel3/dtb
+cp -v /src/out/arch/arm64/boot/dtbo.img /usr/src/anykernel3/dtbo.img
+cp -v /src/out/arch/arm64/boot/Image.gz /usr/src/anykernel3/Image.gz
+
 
 # cleanup previous zips
 rm -f /out/*.zip
