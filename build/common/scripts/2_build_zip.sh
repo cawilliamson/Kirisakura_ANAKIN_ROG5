@@ -23,7 +23,7 @@ cp -fv /common/configs/perfboostsconfig.xml /usr/src/anykernel3/modules/system/v
 find /src/out -name '*.ko' -exec cp -v '{}' /usr/src/anykernel3/modules/system/vendor/lib/modules \;
 
 # copy kernel image and dtb to zip
-cp -v /src/out/arch/arm64/boot/dtb /usr/src/anykernel3/dtb
+cp -v /src/out/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dtb /usr/src/anykernel3/dtb
 cp -v /src/out/arch/arm64/boot/dtbo.img /usr/src/anykernel3/dtbo.img
 cp -v /src/out/arch/arm64/boot/Image.gz /usr/src/anykernel3/Image.gz
 

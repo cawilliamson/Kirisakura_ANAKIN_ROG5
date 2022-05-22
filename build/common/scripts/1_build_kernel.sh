@@ -24,4 +24,4 @@ make -C $(pwd) \
 
 make -j$(nproc --all) -C $(pwd) \
   O=$(pwd)/out \
-  LLVM=1 \
+  LLVM=1
